@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Kabut — Stealth & Anti-Fingerprinting Shield",
+  "version": "3.0.0",
+  "description": "Perlindungan privasi tingkat paranoia: spoofing perangkat (Canvas/WebGL/WebGPU/Audio/Navigator/Permissions), farbling blob-worker, sanitasi header klien (termasuk Accept-CH), WebRTC ketat (termasuk SDP), seed stabil per-domain. Zona waktu & bahasa tetap asli.",
+  "author": "Kabut Project",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage", "privacy", "declarativeNetRequest"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Kabut — Stealth Shield",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file://*/*"],
+      "js": ["bridge.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    },
+    {
+      "matches": ["http://*/*", "https://*/*", "file://*/*"],
+      "js": ["kabut-core.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true,
+      "world": "MAIN"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      { "id": "core_headers", "enabled": true, "path": "rules/core.json" },
+      { "id": "strict_headers", "enabled": false, "path": "rules/strict.json" }
+    ]
+  }
+}

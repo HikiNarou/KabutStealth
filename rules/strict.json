@@ -1,0 +1,52 @@
+[
+  {
+    "id": 2,
+    "priority": 1,
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "csp_report", "media", "websocket", "other"]
+    },
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "Sec-CH-UA", "operation": "remove" },
+        { "header": "Sec-CH-UA-Mobile", "operation": "remove" },
+        { "header": "Sec-CH-UA-Platform", "operation": "remove" }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "condition": {
+      "urlFilter": "*",
+      "domainType": "thirdParty",
+      "resourceTypes": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "media", "websocket", "other"]
+    },
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "If-None-Match", "operation": "remove" },
+        { "header": "If-Modified-Since", "operation": "remove" }
+      ],
+      "responseHeaders": [
+        { "header": "ETag", "operation": "remove" }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "csp_report", "media", "websocket", "other"]
+    },
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "DNT", "operation": "remove" },
+        { "header": "Sec-GPC", "operation": "remove" }
+      ]
+    }
+  }
+]

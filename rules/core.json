@@ -1,0 +1,49 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["main_frame", "sub_frame", "stylesheet", "script", "image", "font", "object", "xmlhttprequest", "ping", "csp_report", "media", "websocket", "other"]
+    },
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "Sec-CH-UA-Arch", "operation": "remove" },
+        { "header": "Sec-CH-UA-Bitness", "operation": "remove" },
+        { "header": "Sec-CH-UA-Full-Version-List", "operation": "remove" },
+        { "header": "Sec-CH-UA-Model", "operation": "remove" },
+        { "header": "Sec-CH-UA-Platform-Version", "operation": "remove" },
+        { "header": "Sec-CH-UA-Full-Version", "operation": "remove" },
+        { "header": "Sec-CH-UA-WOW64", "operation": "remove" },
+        { "header": "Sec-CH-UA-Form-Factors", "operation": "remove" },
+        { "header": "X-Client-Data", "operation": "remove" },
+        { "header": "Sec-CH-Prefers-Color-Scheme", "operation": "remove" },
+        { "header": "Sec-CH-Prefers-Reduced-Motion", "operation": "remove" },
+        { "header": "Sec-CH-Forced-Colors", "operation": "remove" },
+        { "header": "Device-Memory", "operation": "remove" },
+        { "header": "Save-Data", "operation": "remove" },
+        { "header": "Rtt", "operation": "remove" },
+        { "header": "Downlink", "operation": "remove" },
+        { "header": "Viewport-Width", "operation": "remove" },
+        { "header": "Width", "operation": "remove" },
+        { "header": "DPR", "operation": "remove" }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["main_frame", "sub_frame", "xmlhttprequest"]
+    },
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "Accept-CH", "operation": "remove" },
+        { "header": "Critical-CH", "operation": "remove" }
+      ]
+    }
+  }
+]

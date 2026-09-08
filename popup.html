@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { width: 372px; background: #0b0f14; color: #e6edf3; padding: 14px; }
+  .head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .head img { width: 30px; height: 30px; }
+  .head .t { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
+  .head .t small { display: block; font-weight: 400; font-size: 10.5px; color: #8b98a5; }
+  .badge { margin-left: auto; font-size: 10.5px; font-weight: 700; padding: 4px 9px; border-radius: 20px; }
+  .badge.on { background: rgba(34,211,170,.15); color: #22d3aa; border: 1px solid rgba(34,211,170,.35); }
+  .badge.off { background: rgba(248,113,113,.12); color: #f87171; border: 1px solid rgba(248,113,113,.3); }
+  .card { background: #111823; border: 1px solid #1e2a38; border-radius: 10px; padding: 11px 12px; margin-bottom: 10px; }
+  .row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+  .row + .row { border-top: 1px solid #1a2430; }
+  .row .lbl { font-size: 12.5px; color: #c9d4de; }
+  .row .dom { font-size: 12.5px; color: #7dd3fc; font-weight: 600; word-break: break-all; }
+  .row select, .row input { margin-left: auto; }
+  select { background: #0d1420; color: #e6edf3; border: 1px solid #22303f; border-radius: 7px; font-size: 12px; padding: 4px 6px; max-width: 190px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .mini { background: #0d1420; border: 1px solid #22303f; border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+  .mini .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; }
+  .mini.on .dot { background: #22d3aa; box-shadow: 0 0 6px #22d3aa; }
+  .mini span { font-size: 11.5px; color: #c9d4de; }
+  .switch { position: relative; margin-left: auto; width: 38px; height: 21px; flex: none; }
+  .switch input { display: none; }
+  .switch i { position: absolute; inset: 0; background: #26313f; border-radius: 20px; transition: .18s; cursor: pointer; }
+  .switch i::after { content: ''; position: absolute; width: 15px; height: 15px; border-radius: 50%; background: #8b98a5; top: 3px; left: 3px; transition: .18s; }
+  .switch input:checked + i { background: #0f766e; }
+  .switch input:checked + i::after { left: 20px; background: #22d3aa; }
+  .btns { display: flex; gap: 8px; margin-top: 2px; }
+  button { flex: 1; background: #0d1420; color: #c9d4de; border: 1px solid #22303f; border-radius: 8px; padding: 8px 6px; font-size: 11.5px; cursor: pointer; }
+  button:hover { border-color: #2dd4bf55; color: #e6edf3; }
+  button.primary { background: rgba(34,211,170,.12); border-color: rgba(34,211,170,.4); color: #22d3aa; font-weight: 600; }
+  .foot { font-size: 10px; color: #64748b; margin-top: 8px; line-height: 1.5; }
+  .foot b { color: #8b98a5; }
+  .foot .ok { color: #22d3aa; }
+  .toast { position: fixed; left: 14px; right: 14px; bottom: 10px; background: #13203099; border: 1px solid #22303f; color: #7dd3fc; font-size: 11px; padding: 7px 10px; border-radius: 8px; display: none; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <img src="icons/icon48.png" alt="Kabut">
+    <div class="t">KABUT <small id="verLine">Stealth &amp; Anti-Fingerprinting v3.0</small></div>
+    <div class="badge on" id="badge">AKTIF</div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <span class="lbl">Proteksi global</span>
+      <label class="switch"><input type="checkbox" id="master"><i></i></label>
+    </div>
+    <div class="row">
+      <span class="dom" id="domain">…</span>
+      <label class="switch"><input type="checkbox" id="domainToggle"><i></i></label>
+    </div>
+    <div class="row">
+      <span class="lbl">Profil perangkat</span>
+      <select id="profile">
+        <option value="real">Asli (buramkan sinyal lain)</option>
+        <option value="windows">Windows 10/11 + Chrome</option>
+        <option value="macos">macOS + Chrome</option>
+        <option value="linux">Linux + Chrome</option>
+      </select>
+    </div>
+    <div class="row">
+      <span class="lbl">WebRTC</span>
+      <select id="webrtc">
+        <option value="strict">Ketat (mDNS saja)</option>
+        <option value="balanced">Seimbang (+relay)</option>
+        <option value="block">Blokir total</option>
+        <option value="off">Nonaktif</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="padding-bottom:8px"><span class="lbl" style="font-weight:600">Perlindungan cepat</span></div>
+    <div class="grid">
+      <div class="mini" data-key="canvas"><i class="dot"></i><span>Canvas</span></div>
+      <div class="mini" data-key="webgl"><i class="dot"></i><span>WebGL / GPU</span></div>
+      <div class="mini" data-key="webgpu"><i class="dot"></i><span>WebGPU</span></div>
+      <div class="mini" data-key="workers"><i class="dot"></i><span>Web Worker</span></div>
+      <div class="mini" data-key="audio"><i class="dot"></i><span>Audio</span></div>
+      <div class="mini" data-key="screen"><i class="dot"></i><span>Layar</span></div>
+      <div class="mini" data-key="hardware"><i class="dot"></i><span>CPU / RAM</span></div>
+      <div class="mini" data-key="rects"><i class="dot"></i><span>ClientRects</span></div>
+    </div>
+  </div>
+
+  <div class="btns">
+    <button id="reroll">Acak Ulang Seed Domain</button>
+    <button id="test">Uji Sidik Jari</button>
+  </div>
+  <div class="btns" style="margin-top:8px">
+    <button id="testWebGpu">Uji WebGPU</button>
+    <button id="options" class="primary">Pengaturan Lanjutan</button>
+  </div>
+
+  <div class="foot" id="foot">
+    <b>WebRTC (jaringan):</b> memeriksa…<br>
+    <b>Sanitasi header:</b> memeriksa…<br>
+    <b>Zona waktu &amp; bahasa:</b> asli (sesuai preferensi Anda)
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

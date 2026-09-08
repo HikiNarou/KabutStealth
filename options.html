@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Kabut — Pengaturan</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { background: #0b0f14; color: #e6edf3; max-width: 860px; margin: 0 auto; padding: 26px 20px 60px; }
+  h1 { display: flex; align-items: center; gap: 12px; font-size: 22px; margin-bottom: 4px; }
+  h1 img { width: 38px; height: 38px; }
+  h1 small { font-size: 11px; color: #8b98a5; font-weight: 400; display: block; }
+  h2 { font-size: 14.5px; color: #22d3aa; margin: 26px 0 10px; letter-spacing: .4px; text-transform: uppercase; }
+  .card { background: #111823; border: 1px solid #1e2a38; border-radius: 12px; padding: 14px 16px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  .row + .row { border-top: 1px solid #1a2430; }
+  .row .lbl { font-size: 13px; color: #c9d4de; }
+  .row .lbl small { display: block; font-size: 11px; color: #64748b; margin-top: 2px; max-width: 520px; line-height: 1.45; }
+  .row select, .row input[type=text] { margin-left: auto; }
+  select, input[type=text], textarea { background: #0d1420; color: #e6edf3; border: 1px solid #22303f; border-radius: 8px; font-size: 12.5px; padding: 7px 9px; }
+  select { min-width: 230px; }
+  textarea { width: 100%; min-height: 74px; resize: vertical; font-family: ui-monospace, monospace; font-size: 12px; line-height: 1.6; }
+  .switch { position: relative; margin-left: auto; width: 42px; height: 23px; flex: none; }
+  .switch input { display: none; }
+  .switch i { position: absolute; inset: 0; background: #26313f; border-radius: 20px; transition: .18s; cursor: pointer; }
+  .switch i::after { content: ''; position: absolute; width: 17px; height: 17px; border-radius: 50%; background: #8b98a5; top: 3px; left: 3px; transition: .18s; }
+  .switch input:checked + i { background: #0f766e; }
+  .switch input:checked + i::after { left: 22px; background: #22d3aa; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 26px; }
+  button { background: #0d1420; color: #c9d4de; border: 1px solid #22303f; border-radius: 8px; padding: 9px 14px; font-size: 12.5px; cursor: pointer; }
+  button:hover { border-color: #2dd4bf66; color: #fff; }
+  button.primary { background: rgba(34,211,170,.12); border-color: rgba(34,211,170,.4); color: #22d3aa; font-weight: 600; }
+  button.danger { background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.35); color: #f87171; }
+  .btnrow { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; color: #7dd3fc; word-break: break-all; }
+  pre { background: #0d1420; border: 1px solid #1a2430; border-radius: 8px; padding: 10px 12px; font-family: ui-monospace, monospace; font-size: 11.5px; color: #9fb1c1; line-height: 1.6; overflow: auto; max-height: 300px; }
+  .note { font-size: 11.5px; color: #8b98a5; line-height: 1.6; margin-top: 8px; }
+  .note b { color: #c9d4de; }
+  .ok { color: #22d3aa; }
+  a { color: #7dd3fc; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .toast { position: fixed; bottom: 18px; right: 18px; background: #132030; border: 1px solid #22303f; color: #7dd3fc; font-size: 12px; padding: 9px 14px; border-radius: 9px; display: none; box-shadow: 0 6px 24px #0008; }
+</style>
+</head>
+<body>
+<h1><img src="icons/icon48.png" alt="Kabut"> <span>KABUT <small id="verLine">Stealth &amp; Anti-Fingerprinting Shield — v3.0.0</small></span></h1>
+
+<h2>Umum</h2>
+<div class="card">
+  <div class="row">
+    <span class="lbl">Proteksi global<small>Saklar utama semua proteksi aktif.</small></span>
+    <label class="switch"><input type="checkbox" id="enabled"><i></i></label>
+  </div>
+  <div class="row">
+    <span class="lbl">Preset<small>Paranoid: semua permukaan aktif. Seimbang: menonaktifkan permukaan berisiko tinggi kompatibilitas (layar, voices, media query, WebGPU).</small></span>
+    <select id="preset">
+      <option value="paranoid">Paranoid (maksimal)</option>
+      <option value="seimbang">Seimbang (kompatibilitas)</option>
+    </select>
+  </div>
+  <div class="row">
+    <span class="lbl">Sanitasi header (DNR)<small>Core: buang client hints entropy-tinggi, X-Client-Data, hint perangkat/jaringan (Device-Memory, Save-Data, Rtt, Downlink, DPR), hint preferensi — <b>v3: juga membuang Accept-CH/Critical-CH dari response server</b> (opt-in client hints diputus di sumbernya). Strict: buang juga CH entropy-rendah + anti cache-tracking lintas situs (ETag/If-None-Match) + DNT/Sec-GPC. None: header tidak disentuh.</small></span>
+    <select id="headers">
+      <option value="core">Core (disarankan)</option>
+      <option value="strict">Strict</option>
+      <option value="none">Nonaktif</option>
+    </select>
+  </div>
+</div>
+
+<h2>Profil Perangkat &amp; UA</h2>
+<div class="card">
+  <div class="row">
+    <span class="lbl">Profil<small>Versi Chrome asli Anda tetap dipertahankan (hanya platform yang ditransformasi) agar konsistensi fitur-UA selamanya terjaga. Catatan: sidik jari TLS/TCP tidak bisa diubah ekstensi — profil "Asli" atau "Windows" (bila Anda memang di Windows) paling konsisten.</small></span>
+    <select id="profile">
+      <option value="real">Asli — pertahankan UA, buramkan sinyal lain</option>
+      <option value="windows">Windows 10/11 + Chrome</option>
+      <option value="macos">macOS + Chrome</option>
+      <option value="linux">Linux + Chrome</option>
+    </select>
+  </div>
+  <div class="row" style="display:block">
+    <span class="lbl">Pratinjau identitas</span>
+    <pre id="uaPreview">…</pre>
+    <div class="note">Zona waktu &amp; bahasa selalu tetap <b>asli</b> sesuai preferensi Anda — sesuai permintaan.</div>
+  </div>
+</div>
+
+<h2>WebRTC</h2>
+<div class="card">
+  <div class="row">
+    <span class="lbl">Mode WebRTC<small>Ketat: hanya kandidat mDNS (.local) — IP lokal &amp; publik tidak pernah bocor, termasuk dari pembacaan SDP (localDescription), getStats, dan hasil createOffer/createAnswer. Lapisan jaringan memakai disable_non_proxied_udp. Blokir total akan merusak situs konferensi video.</small></span>
+    <select id="webrtc">
+      <option value="strict">Ketat (mDNS saja) — disarankan</option>
+      <option value="balanced">Seimbang (mDNS + relay TURN)</option>
+      <option value="block">Blokir total</option>
+      <option value="off">Nonaktif</option>
+    </select>
+  </div>
+</div>
+
+<h2>Permukaan Perlindungan</h2>
+<div class="card">
+  <div class="row">
+    <span class="lbl">Canvas<small>Mode &amp; kekuatan noise (deterministik per-domain; piksel transparan tidak disentuh agar kanvas kosong tetap "kosong native").</small></span>
+    <select id="canvasMode" style="min-width:150px">
+      <option value="noise">Noise (disarankan)</option>
+      <option value="block">Blokir (blank)</option>
+      <option value="off">Nonaktif</option>
+    </select>
+    <select id="canvasStrength" style="min-width:140px">
+      <option value="subtle">Halus</option>
+      <option value="medium">Sedang</option>
+      <option value="strong">Kuat</option>
+    </select>
+  </div>
+  <div class="grid2">
+    <div class="row"><span class="lbl">WebGL / GPU (+ farbling ekstensi)</span><label class="switch"><input type="checkbox" id="s-webgl"><i></i></label></div>
+    <div class="row"><span class="lbl">WebGPU<small style="display:inline;color:#22d3aa">BARU v3</small></span><label class="switch"><input type="checkbox" id="s-webgpu"><i></i></label></div>
+    <div class="row"><span class="lbl">Web Worker (blob)<small style="display:inline;color:#22d3aa">BARU v3</small></span><label class="switch"><input type="checkbox" id="s-workers"><i></i></label></div>
+    <div class="row"><span class="lbl">API perangkat eksternal<small style="display:inline;color:#22d3aa">BARU v3</small></span><label class="switch"><input type="checkbox" id="s-hwapi"><i></i></label></div>
+    <div class="row"><span class="lbl">AudioContext<small style="display:inline;color:#64748b">(+ sampleRate, latensi)</small></span><label class="switch"><input type="checkbox" id="s-audio"><i></i></label></div>
+    <div class="row"><span class="lbl">ClientRects / getBoundingClientRect</span><label class="switch"><input type="checkbox" id="s-rects"><i></i></label></div>
+    <div class="row"><span class="lbl">Font metrics (measureText)</span><label class="switch"><input type="checkbox" id="s-fonts"><i></i></label></div>
+    <div class="row"><span class="lbl">Layar, dpr, outerWidth &amp; orientasi</span><label class="switch"><input type="checkbox" id="s-screen"><i></i></label></div>
+    <div class="row"><span class="lbl">CPU (hardwareConcurrency)</span><label class="switch"><input type="checkbox" id="s-hardware"><i></i></label></div>
+    <div class="row"><span class="lbl">RAM (deviceMemory)</span><label class="switch"><input type="checkbox" id="s-memory"><i></i></label></div>
+    <div class="row"><span class="lbl">maxTouchPoints</span><label class="switch"><input type="checkbox" id="s-touch"><i></i></label></div>
+    <div class="row"><span class="lbl">enumerateDevices &amp; track label</span><label class="switch"><input type="checkbox" id="s-devices"><i></i></label></div>
+    <div class="row"><span class="lbl">Battery API</span><label class="switch"><input type="checkbox" id="s-battery"><i></i></label></div>
+    <div class="row"><span class="lbl">Network Information API</span><label class="switch"><input type="checkbox" id="s-network"><i></i></label></div>
+    <div class="row"><span class="lbl">Storage estimate (kuota)</span><label class="switch"><input type="checkbox" id="s-storage"><i></i></label></div>
+    <div class="row"><span class="lbl">Keyboard layout (getLayoutMap)</span><label class="switch"><input type="checkbox" id="s-keyboard"><i></i></label></div>
+    <div class="row"><span class="lbl">Plugins / mimeTypes</span><label class="switch"><input type="checkbox" id="s-plugins"><i></i></label></div>
+    <div class="row"><span class="lbl">userAgentData (client hints JS)</span><label class="switch"><input type="checkbox" id="s-uaData"><i></i></label></div>
+    <div class="row"><span class="lbl">matchMedia &amp; mediaCapabilities<small style="display:inline;color:#64748b">(preferensi asli + resolution konsisten dpr)</small></span><label class="switch"><input type="checkbox" id="s-media"><i></i></label></div>
+    <div class="row"><span class="lbl">speechSynthesis voices</span><label class="switch"><input type="checkbox" id="s-voices"><i></i></label></div>
+    <div class="row"><span class="lbl">Permissions API &amp; Notification</span><label class="switch"><input type="checkbox" id="s-permissions"><i></i></label></div>
+  </div>
+</div>
+
+<h2>Situs Terpercaya (Allowlist)</h2>
+<div class="card">
+  <div class="row" style="display:block">
+    <span class="lbl">Domain per baris<small>Situs berikut TIDAK dipatch (nilai asli terlihat). Subdomain diikutkan otomatis (contoh: <span class="mono">example.com</span> mencakup <span class="mono">mail.example.com</span>). Catatan: sanitasi header jaringan tetap berlaku.</small></span>
+    <textarea id="allowlist" placeholder="example.com&#10;bank.example"></textarea>
+  </div>
+</div>
+
+<h2>Lanjutan — Identitas &amp; Data</h2>
+<div class="card">
+  <div class="row" style="display:block">
+    <span class="lbl">Identitas install<small>Seed 128-bit acak yang menjadi dasar seluruh nilai spoof (tersimpan lokal, tidak pernah dikirim ke mana pun).</small></span>
+    <div class="btnrow">
+      <button id="rerollGlobal" class="danger">Acak Ulang Identitas Global</button>
+      <button id="exportBtn">Ekspor Pengaturan</button>
+      <button id="importBtn">Impor Pengaturan</button>
+      <button id="resetBtn" class="danger">Reset ke Default</button>
+      <button id="wipeBtn" class="danger">Hapus Semua Data Kabut</button>
+    </div>
+    <textarea id="ioArea" placeholder="Area ekspor/impor JSON…" style="margin-top:10px"></textarea>
+  </div>
+</div>
+
+<h2>Status &amp; Diagnostik</h2>
+<div class="card">
+  <div class="row" style="display:block">
+    <pre id="diagStatus">memuat…</pre>
+    <div class="btnrow">
+      <button id="refreshDiag">Segarkan Diagnostik</button>
+    </div>
+  </div>
+</div>
+
+<h2>Sidik Jari Asli Peramban Anda</h2>
+<div class="card">
+  <div class="note" style="margin-top:0">Panel ini menampilkan <b>nilai asli</b> peramban Anda (halaman ekstensi tidak dipatch — memang untuk perbandingan). Gunakan untuk membandingkan dengan yang terlihat situs:</div>
+  <pre id="realFp">…</pre>
+  <div class="btnrow">
+    <button data-url="https://abrahamjuliot.github.io/creepjs/">Uji: CreepJS</button>
+    <button data-url="https://coveryourtracks.eff.org/">Uji: Cover Your Tracks (EFF)</button>
+    <button data-url="https://browserleaks.com/canvas">Uji: BrowserLeaks</button>
+    <button data-url="https://browserleaks.com/webgpu">Uji: BrowserLeaks WebGPU</button>
+    <button data-url="https://amiunique.org/fingerprint">Uji: AmIUnique</button>
+    <button data-url="https://www.browserscan.net/">Uji: BrowserScan</button>
+  </div>
+</div>
+
+<h2>Tentang</h2>
+<div class="card">
+  <div class="note" style="margin-top:0">
+    <b>Kabut v3.0.0</b> — ekstensi MV3 untuk Edge / Brave / Vivaldi (Chromium ≥ 111). Semua data tersimpan lokal via <span class="mono">chrome.storage.local</span>; tidak ada telemetri, tidak ada permintaan jaringan keluar; <b>tanpa izin "tabs"</b> (v3 — permukaan privilese diperkecil). Lisensi MIT.<br><br>
+    <b>Arsitektur:</b> injeksi <span class="mono">world: MAIN</span> pada <span class="mono">document_start</span> (sebelum skrip halaman), seed stabil per-domain (farbling ala Brave: session-token × eTLD+1), noise deterministik, WebRTC dua lapis (jaringan + JS + sanitasi SDP), sanitasi header via <span class="mono">declarativeNetRequest</span>, anti-deteksi tampering (toString/name/length native, shim Proxy di atas prototipe asli, makeBoundProxy untuk objek platform WebGPU, fallback senyap), <b>farbling blob-worker</b> + guard window.open + guard iframe pristin.<br><br>
+    <b>Batasan yang jujur:</b> (1) worker ber-URL file &amp; Service Worker halaman tetap tanpa farbling (blob-worker kini terlindungi; membungkus file asli tidak bisa dilakukan tanpa risiko merusak); (2) sidik jari TLS (JA3/JA4) &amp; stack TCP tidak dapat diubah ekstensi — gunakan profil "Asli"/"Windows" agar konsisten, atau VPN/proxy untuk anonimitas jaringan; (3) fingerprint canvas dapat berbeda bila Anda juga mengaktifkan farbling bawaan Brave (dobel noise — nonaktifkan salah satu bila perlu); (4) innerWidth/innerHeight dibiarkan asli (volatile, bukan sidik jari perangkat).
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="kabut-core.js"></script>
+<script src="options.js"></script>
+</body>
+</html>
